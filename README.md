@@ -88,6 +88,21 @@ loadFonts([{name: 'nameOfFont', data: base64FontString, type: 'ttf'}]).then(func
 
 ```
 
+#### Font loading using file path (android only)
+You can download font file to file system and then load it to app without sending base64 to bridge.
+ 
+```javascript
+import {loadFontFromFile} from 'react-native-dynamic-fonts';
+import RNFetchBlob from 'rn-fetch-blob'
+
+const fontFilePath = RNFetchBlob.fs.dirs.DocumentDir + "fonts/roboto.ttf";
+
+loadFontFromFile("Roboto",  fontFilePath)
+   .then(function(name) {
+   	    console.log('Loaded font successfully. Font name is: ', name);
+   });
+
+```
 
 #### Note
 

@@ -4,8 +4,8 @@
  * This source code is licensed under the MIT license found in the LICENSE file in the root
  * directory of this source tree.
  */
- 
-const { NativeModules } = require('react-native');
+
+const { NativeModules, Platform } = require('react-native');
 const { DynamicFonts } = NativeModules;
 const loadedFonts = {};
 
@@ -39,6 +39,31 @@ function loadFont(name, data, type, forceLoad) {
   });
 }
 
+function loadFontFromFile(name, filePath) {
+  if (!name)
+    throw new Error('name is a required argument');
+
+  if (!filePath)
+    throw new Error('filePath is a required argument');
+
+  return new Promise(function(resolve, reject) {
+    DynamicFonts.loadFontFromFile({
+      name,
+      filePath
+    }, function(err, givenName) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(givenName);
+    });
+  });
+}
+
+function unsupportedFeature () {
+  return Promise.reject("The feature is unsupported on this platform")
+}
+
 function loadFonts(_fontList, forceLoad) {
   var fontList = _fontList;
   if (!fontList)
@@ -52,5 +77,9 @@ function loadFonts(_fontList, forceLoad) {
 
 module.exports = {
 	loadFont: loadFont,
-  loadFonts: loadFonts
+  loadFonts: loadFonts,
+  loadFontFromFile: Platform.select({
+    android: loadFontFromFile,
+    default: unsupportedFeature,
+  })
 }
