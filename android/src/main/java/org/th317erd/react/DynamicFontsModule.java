@@ -140,6 +140,12 @@ class DynamicFontsModule extends ReactContextBaseJavaModule {
       //Load the font from the temporary file we just created
       Typeface typeface = Typeface.createFromFile(cacheFile);
 
+      if (typeface.isBold())
+        name = name + "_bold";
+
+      if (typeface.isItalic())
+        name = name + "_italic";
+
       //Cache the font for react
       ReactFontManager.getInstance().setTypeface(name, typeface.getStyle(), typeface);
 
