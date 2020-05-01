@@ -88,7 +88,7 @@ loadFonts([{name: 'nameOfFont', data: base64FontString, type: 'ttf'}]).then(func
 
 ```
 
-#### Font loading using file path (android only)
+#### Font loading using file path
 You can download font file to file system and then load it to app without sending base64 to bridge.
  
 ```javascript
