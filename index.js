@@ -5,7 +5,7 @@
  * directory of this source tree.
  */
 
-const { NativeModules, Platform } = require('react-native');
+const { NativeModules } = require('react-native');
 const { DynamicFonts } = NativeModules;
 const loadedFonts = {};
 
@@ -78,8 +78,5 @@ function loadFonts(_fontList, forceLoad) {
 module.exports = {
 	loadFont: loadFont,
   loadFonts: loadFonts,
-  loadFontFromFile: Platform.select({
-    android: loadFontFromFile,
-    default: unsupportedFeature,
-  })
+  loadFontFromFile: loadFontFromFile
 }

@@ -14,6 +14,38 @@
 
 RCT_EXPORT_MODULE();
 
+- (void) loadFontWithData:(CGDataProviderRef) fontDataProvider callback:(RCTResponseSenderBlock)callback
+{
+  CGFontRef newFont = CGFontCreateWithDataProvider(fontDataProvider);
+  NSString *newFontName = (__bridge NSString *)CGFontCopyPostScriptName(newFont);
+
+  UIFont* font = [UIFont fontWithName:newFontName size:16];
+  if (font != nil) {
+    CGDataProviderRelease(fontDataProvider);
+    callback(@[[NSNull null], newFontName]);
+    return;
+  }
+
+  CFErrorRef error;
+  if (! CTFontManagerRegisterGraphicsFont(newFont, &error)) {
+    CFStringRef errorDescription = CFErrorCopyDescription(error);
+    NSLog(@"Failed to register font: %@", errorDescription);
+
+    callback(@[@"Failed to register font: %@", (__bridge NSString *)errorDescription]);
+  
+    CFRelease(errorDescription);
+    CGFontRelease(newFont);
+    CGDataProviderRelease(fontDataProvider);
+    
+    return;
+  }
+
+  CGFontRelease(newFont);
+  CGDataProviderRelease(fontDataProvider);
+
+  callback(@[[NSNull null], newFontName]);
+}
+
 RCT_EXPORT_METHOD(loadFont:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
 {
   NSString *name = [options valueForKey:@"name"];
@@ -58,37 +90,32 @@ RCT_EXPORT_METHOD(loadFont:(NSDictionary *)options callback:(RCTResponseSenderBl
     
   NSData *decodedData = [[NSData alloc]initWithBase64EncodedString:data options:NSDataBase64DecodingIgnoreUnknownCharacters];
   CGDataProviderRef fontDataProvider = CGDataProviderCreateWithCFData((__bridge CFDataRef)decodedData);
+  [self loadFontWithData:fontDataProvider callback:callback];
+}
 
-  [UIFont familyNames];
+RCT_EXPORT_METHOD(loadFontFromFile:(NSDictionary *)options callback:(RCTResponseSenderBlock)callback)
+{
+  NSString *name = [options valueForKey:@"name"];
+  NSString *filePath = [options valueForKey:@"filePath"];
+  NSString *type = NULL;
   
-  CGFontRef newFont = CGFontCreateWithDataProvider(fontDataProvider);
-  NSString *newFontName = (__bridge NSString *)CGFontCopyPostScriptName(newFont);
-
-  UIFont* font = [UIFont fontWithName:newFontName size:16];
-  if (font != nil) {
-    CGDataProviderRelease(fontDataProvider);
-    callback(@[[NSNull null], newFontName]);
+  if ([name isEqual:[NSNull null]]) {
+    callback(@[@"Name property is empty"]);
     return;
   }
-  
-  CFErrorRef error;
-  if (! CTFontManagerRegisterGraphicsFont(newFont, &error)) {
-    CFStringRef errorDescription = CFErrorCopyDescription(error);
-    NSLog(@"Failed to register font: %@", errorDescription);
 
-    callback(@[@"Failed to register font: %@", (__bridge NSString *)errorDescription]);
+  if ([filePath isEqual:[NSNull null]]) {
+    callback(@[@"FilePath property is empty"]);
+    return;
+  }
+
+  if ([type isEqual:[NSNull null]])
+    type = [options valueForKey:@"type"];
+
+  if ([type isEqual:[NSNull null]]) type = @"ttf";
     
-    CFRelease(errorDescription);
-    CGFontRelease(newFont);
-    CGDataProviderRelease(fontDataProvider);
-      
-    return;
-  }
-
-  CGFontRelease(newFont);
-  CGDataProviderRelease(fontDataProvider);
-
-  callback(@[[NSNull null], newFontName]);
+  CGDataProviderRef fontDataProvider = CGDataProviderCreateWithFilename(filePath.fileSystemRepresentation);
+  [self loadFontWithData:fontDataProvider callback:callback];
 }
 
 @end
