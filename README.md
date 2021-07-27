@@ -71,7 +71,7 @@ pod 'DynamicFonts', :path => 'node_modules/react-native-dynamic-fonts'
 
 To load a font dynamically, you must first have a base64 string of your font file (TTF or OTF):
 ```javascript
-import { loadFont, loadFonts } from 'yarn add @npt/react-native-app-fonts';
+import { loadFont, loadFonts } from '@npt/react-native-app-fonts';
 
 ...
 /* Load a single font */
@@ -92,7 +92,7 @@ loadFonts([{name: 'nameOfFont', data: base64FontString, type: 'ttf'}]).then(func
 You can download font file to file system and then load it to app without sending base64 to bridge.
  
 ```javascript
-import {loadFontFromFile} from 'yarn add @npt/react-native-app-fonts';
+import {loadFontFromFile} from '@npt/react-native-app-fonts';
 import RNFetchBlob from 'rn-fetch-blob'
 
 const fontFilePath = RNFetchBlob.fs.dirs.DocumentDir + "fonts/roboto.ttf";
