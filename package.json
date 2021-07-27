@@ -1,15 +1,15 @@
 {
-  "name": "react-native-dynamic-fonts",
+  "name": "@npt/react-native-app-fonts",
   "main": "index.js",
-  "version": "0.3.2",
-  "description": "React Native Dynamic Fonts",
+  "version": "1.0.0",
+  "description": "React Native App Fonts",
   "nativePackage": true,
   "license": "MIT",
-  "url": "https://github.com/eVisit/react-native-dynamic-fonts",
-  "email": "tech@evisit.com",
+  "url": "https://github.com/phithu/react-native-dynamic-fonts",
+  "email": "phithu.dev@gmail.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eVisit/react-native-dynamic-fonts.git"
+    "url": "https://github.com/phithu/react-native-dynamic-fonts.git"
   },
   "author": "eVisit (Wyatt Greenway)",
   "dependencies": {}
